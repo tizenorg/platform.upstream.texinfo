@@ -1,0 +1,26 @@
+--- info/echo-area.c
++++ info/echo-area.c	Tue Jan 25 17:32:07 2005
+@@ -1502,7 +1502,7 @@
+ void
+ inform_in_echo_area (const char *message)
+ {
+-  int i;
++  int i, len;
+   char *text;
+   int avail = EA_MAX_INPUT + 1 - input_line_end;
+ 
+@@ -1512,7 +1512,13 @@
+   text[i] = 0;
+ 
+   echo_area_initialize_node ();
+-  sprintf (&input_line[input_line_end], "%s[%s]\n",
++
++  len = EA_MAX_INPUT - input_line_end;
++  if (len <= 0) {
++	free (text);
++	return;
++  }
++  snprintf (&input_line[input_line_end], len, "%s[%s]\n",
+            echo_area_is_active ? " ": "", text);
+   free (text);
+   the_echo_area->point = input_line_point;
