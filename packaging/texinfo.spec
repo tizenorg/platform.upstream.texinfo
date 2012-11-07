@@ -1,17 +1,28 @@
 Name:           texinfo
+BuildRequires:  automake
+BuildRequires:  help2man
+BuildRequires:  bzip2-devel
+BuildRequires:  libzio-devel
+BuildRequires:  ncurses-devel
+BuildRequires:  perl-gettext
+BuildRequires:  zlib-devel
 Version:        4.13a
 Release:        0
-License:        GPL-2.0+ ; GPL-3.0+
+%global         version_t2h 1.82
+%global         version_t2r 2.0
 Summary:        Tools Needed to Create Documentation from Texinfo Sources
-Url:            http://www.texinfo.org
+License:        GPL-2.0+ ; GPL-3.0+
 Group:          Productivity/Publishing/Texinfo
+Url:            http://www.texinfo.org
+Provides:       texi2html = %{version_t2h}
+Provides:       texi2roff = %{version_t2r}
 Source:         ftp://ftp.gnu.org/pub/gnu/texinfo/texinfo-%{version}.tar.bz2
 Source1:        http://download.savannah.nongnu.org/releases/texi2html/texi2html-%{version_t2h}.tar.bz2
 # texinfo.org: the domain is expired.
 # http://texinfo.org/texi2roff/texi2roff-%{version_t2r}.tar.bz2
 Source2:        texi2roff-%{version_t2r}.tar.bz2
 Source10:       info-dir
-Patch0:         texinfo-4.12.dif
+Patch:          texinfo-4.12.dif
 Patch1:         texi2html-1.78.dif
 Patch2:         texi2roff-2.0.dif
 Patch3:         texi2roff.patch.bz2
@@ -21,18 +32,7 @@ Patch6:         texi2roff-2.0-gcc4.patch
 Patch7:         texinfo-4.13a-bug640417.diff
 Patch8:         texinfo-4.13a-bug713517.diff
 Patch9:         automake-1.12.patch
-BuildRequires:  automake
-BuildRequires:  bzip2-devel
-BuildRequires:  help2man
-BuildRequires:  libzio-devel
-BuildRequires:  ncurses-devel
-BuildRequires:  perl-gettext
-BuildRequires:  zlib-devel
-Provides:       texi2html = %{version_t2h}
-Provides:       texi2roff = %{version_t2r}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-%global         version_t2h 1.82
-%global         version_t2r 2.0
 
 %description
 Texinfo is a documentation system that uses a single source file to
@@ -45,13 +45,28 @@ makeinfo tool.
 
 Aggregated with texinfo in this package is texi2html and texi2roff.
 
+
+Authors:
+--------
+    Andreas Schwab <schwab@suse.de>
+    Brian Fox <bfox@gnu.org>
+    Charles Hannum <mycroft@gnu.org>
+    Daniel Hagerty <hag@gnu.org>
+    David J. MacKenzie <djm@gnu.org>
+    Eli Zaretskii  <eliz@is.elta.co.il>
+    Jim Meyering <meyering@na-net.ornl.gov>
+    Karl Berry  <karl@gnu.org>
+    Kaveh R. Ghazi <ghazi@caip.rutgers.edu>
+    Noah Friedman <friedman@prep.org>
+    Richard Stallman <rms@gnu.org>
+    Robert J. Chassell <bob@gnu.org>
+    Roland McGrath <roland@gnu.org>
+
 %package -n info
-License:        GPL-3.0+
 Summary:        A Stand-Alone Terminal-Based Info Browser
+License:        GPL-3.0+
 Group:          Productivity/Publishing/Texinfo
-Requires(pre):  bash
-Requires(pre):  libzio
-Requires(pre):  zlib
+PreReq:         bash zlib libzio
 
 %description -n info
 Info is a terminal-based program for reading documentation of computer
@@ -59,12 +74,30 @@ programs in the Info format. The GNU Project distributes most of its
 on-line manuals in the Info format, so you need a program called "Info
 reader" to read the manuals.
 
+
+
+Authors:
+--------
+    Andreas Schwab <schwab@suse.de>
+    Brian Fox <bfox@gnu.org>
+    Charles Hannum <mycroft@gnu.org>
+    Daniel Hagerty <hag@gnu.org>
+    David J. MacKenzie <djm@gnu.org>
+    Eli Zaretskii  <eliz@is.elta.co.il>
+    Jim Meyering <meyering@na-net.ornl.gov>
+    Karl Berry  <karl@gnu.org>
+    Kaveh R. Ghazi <ghazi@caip.rutgers.edu>
+    Noah Friedman <friedman@prep.org>
+    Richard Stallman <rms@gnu.org>
+    Robert J. Chassell <bob@gnu.org>
+    Roland McGrath <roland@gnu.org>
+
 %package -n makeinfo
-License:        GPL-3.0+
 Summary:        Translate Texinfo documents to info format
+License:        GPL-3.0+
 Group:          Productivity/Publishing/Texinfo
-Suggests:       texinfo
 Provides:       texinfo:/usr/bin/makeinfo
+Suggests:       texinfo
 
 %description -n makeinfo
 Makeinfo translates  Texinfo source documentation to various other
@@ -79,7 +112,7 @@ rm -rf texi2html-%{version_t2h} texi2roff-%{version_t2r}
 %patch7 -p1 -b .size_t
 %patch8 -p0 -b .egrep
 %patch9 -p1
-%patch0 -p0
+%patch -p0
 pushd ../texi2html-%{version_t2h}
 %patch1 -p0
 popd
@@ -91,7 +124,7 @@ popd
 
 %build
     HOST=%{_target_cpu}-tizen-linux
-    CFLAGS="%{optflags} -pipe"
+    CFLAGS="$RPM_OPT_FLAGS -pipe"
     LDFLAGS=""
     CC=gcc
     export CFLAGS LDFLAGS CC
@@ -131,7 +164,7 @@ popd
     mv %{buildroot}%{_bindir}/install-info %{buildroot}/sbin/
     ln -sf ../../sbin/install-info %{buildroot}%{_bindir}/install-info
     mkdir -p %{buildroot}%{_infodir}
-    install -m 644 %{SOURCE10}       %{buildroot}%{_infodir}/dir
+    install -m 644 %{S:10}       %{buildroot}%{_infodir}/dir
 pushd ../texi2html-%{version_t2h}
     make DESTDIR=%{buildroot} \
 	infodir=%{_infodir}	   \
@@ -149,7 +182,10 @@ pushd ../texi2roff-%{version_t2r}
     install -m 644 Readme        %{buildroot}${doc}
     install -m 644 copyright     %{buildroot}${doc}
 popd
-%find_lang %{name} %{name}.lang
+%find_lang %name %{name}.lang
+
+%clean
+test -n "%{buildroot}" && rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root)
