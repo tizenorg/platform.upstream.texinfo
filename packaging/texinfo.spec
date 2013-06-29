@@ -22,6 +22,7 @@ Source1:        http://download.savannah.nongnu.org/releases/texi2html/texi2html
 # http://texinfo.org/texi2roff/texi2roff-%{version_t2r}.tar.bz2
 Source2:        texi2roff-%{version_t2r}.tar.bz2
 Source10:       info-dir
+Source1001: 	texinfo.manifest
 Patch:          texinfo-4.12.dif
 Patch1:         texi2html-1.78.dif
 Patch2:         texi2roff-2.0.dif
@@ -107,6 +108,7 @@ or standalone GNU Info.
 %prep
 rm -rf texi2html-%{version_t2h} texi2roff-%{version_t2r}
 %setup -q -b 1 -b 2 -n texinfo-4.13
+cp %{SOURCE1001} .
 %patch4 -p0 -b .zlib
 %patch5 -p0 -b .echo
 %patch7 -p1 -b .size_t
@@ -188,6 +190,7 @@ popd
 test -n "%{buildroot}" && rm -rf %{buildroot}
 
 %files
+%manifest %{name}.manifest
 %defattr(-, root, root)
 %dir %{_defaultdocdir}/texi2html
 %dir %{_defaultdocdir}/texi2roff
@@ -206,11 +209,13 @@ test -n "%{buildroot}" && rm -rf %{buildroot}
 %{_datadir}/texi2html
 
 %files -n makeinfo -f %{name}.lang
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %{_bindir}/makeinfo
 %{_mandir}/man1/makeinfo.1.gz
 
 %files -n info
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %config(noreplace) %verify(not md5 size mtime) %{_infodir}/dir
 /sbin/install-info
