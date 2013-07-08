@@ -1,0 +1,8 @@
+Change-Id: If7d5b2f13e0315ef47e84fcc6db5f465e3192a08
+Code-Review+2: Ryan Ware <ware@linux.intel.com>
+Verified+1: Ryan Ware <ware@linux.intel.com>
+Submitted-by: Ryan Ware <ware@linux.intel.com>
+Submitted-at: Mon, 08 Jul 2013 09:38:35 -0700
+Reviewed-on: https://review.tizen.org/gerrit/4990
+Project: platform/upstream/texinfo
+Branch: refs/heads/tizen
