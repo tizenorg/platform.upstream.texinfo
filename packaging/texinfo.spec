@@ -143,12 +143,7 @@ popd
     export PATH
     make %{?_smp_mflags};
 pushd ../texi2html-%{version_t2h}
-    ./configure --build=$HOST		\
-	--prefix=%{_prefix}		\
-	--mandir=%{_mandir}		\
-	--datadir=%{_datadir}		\
-	--infodir=%{_infodir}		\
-	--without-included-gettext	\
+	%reconfigure --without-included-gettext	\
 	--enable-nls
     make %{?_smp_mflags};
 popd
