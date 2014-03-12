@@ -143,6 +143,7 @@ popd
     export PATH
     make %{?_smp_mflags};
 pushd ../texi2html-%{version_t2h}
+    autoreconf -fi
     ./configure --build=$HOST		\
 	--prefix=%{_prefix}		\
 	--mandir=%{_mandir}		\
