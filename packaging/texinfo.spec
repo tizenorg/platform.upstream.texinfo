@@ -125,6 +125,9 @@ pushd ../texi2roff-%{version_t2r}
 popd
 
 %build
+export CFLAGS+=" -fvisibility=hidden"
+  export CXXFLAGS+=" -fvisibility=hidden"
+  
     HOST=%{_target_cpu}-tizen-linux
     CFLAGS="$RPM_OPT_FLAGS -pipe"
     LDFLAGS=""
