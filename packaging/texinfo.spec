@@ -133,6 +133,8 @@ export CFLAGS+=" -fvisibility=hidden"
     LDFLAGS=""
     CC=gcc
     export CFLAGS LDFLAGS CC
+export CFLAGS+=" -fvisibility=hidden"
+  export CXXFLAGS+=" -fvisibility=hidden"
     export LD_AS_NEEDED=0
     AUTOPOINT=true autoreconf -fi
     ./configure --build=$HOST		\
